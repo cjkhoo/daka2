@@ -19,7 +19,7 @@
         <div class="form-group mb-3">
             <label for="location" class="form-label">上班地點</label>
             <select name="loc_id" id="location" class="form-select select2">
-                <option value="">选择地点</option>
+                <option value="">選擇地點</option>
                 @foreach($locations as $location)
                     <option value="{{ $location->id }}" {{ $user->loc_id == $location->id ? 'selected' : '' }}>
                         {{ $location->loc_name }}

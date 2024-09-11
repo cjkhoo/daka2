@@ -34,7 +34,7 @@ return [
     ),
 
     'company' => [
-       'name' => '盈源工程行',
+       'name' => '盈源工程有限公司',
        'copyright' => 'CopyRight By @Yihren',
     ],
 
