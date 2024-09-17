@@ -75,7 +75,7 @@ class CheckInController extends Controller
             ->orderBy('date', 'desc')
             ->get();
         
-        return view('web.checkin_list', compact('checkins', 'months', 'selectedMonth'));
+        return view('web.checkin_list', compact('checkins', 'months', 'selectedMonth','user'));
     }
 
 

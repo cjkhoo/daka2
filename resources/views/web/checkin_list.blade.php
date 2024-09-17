@@ -45,6 +45,8 @@
     </div>
 </form>
 
+  
+
     <div class="table-responsive">
         <table class="table table-striped table-hover">
             <thead class="thead-dark">
@@ -68,11 +70,18 @@
                     @php
                         $highlight = false;
                  
-     
-                        if ($checkin->check_in_distance > 100 || 
-                            $checkin->check_in_time?->format('H:i') > '09:00') {
+                        if($user->user_level==2){
+                            if ($checkin->check_in_distance > 100 || 
+                            $checkin->check_in_time?->format('H:i') > '08:30') {
                             $highlight = true;
+                         }
+                        }elseif($user->user_level==3){
+                            if ($checkin->check_in_distance > 100 || 
+                            $checkin->check_in_time?->format('H:i') > '08:00') {
+                            $highlight = true;
+                         }
                         }
+                        
                     @endphp
                     <tr class="{{ $highlight ? 'warning' : '' }}">
                         <td>{{ $checkin->date->format('Y-m-d') }}</td>

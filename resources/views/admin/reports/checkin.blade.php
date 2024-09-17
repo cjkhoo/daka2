@@ -80,8 +80,25 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($attendances as $attendance)
-            <tr class="{{ ($attendance->check_in_distance > 100 || $attendance->check_in_time?->format('H:i') > '09:00') ? 'table-warning' : '' }}">
+        
+        @foreach($attendances as $attendance)
+            @php
+                        $highlight = false;
+                 
+                        if($user->user_level==2){
+                            if ($attendance->check_in_distance  > 100 || 
+                            $attendance->check_in_time?->format('H:i') > '08:30') {
+                            $highlight = true;
+                         }
+                        }elseif($user->user_level==3){
+                            if ($attendance->check_in_distance  > 100 || 
+                            $attendance->check_in_time?->format('H:i') > '08:00') {
+                            $highlight = true;
+                         }
+                        }
+            @endphp           
+            <tr class="{{ $highlight ? 'table-warning' : '' }}">
+          
                 <td>{{ $attendance->date?->format('Y-m-d') }}</td>
                 <td>{{ $attendance->user_name }}</td>
                 <td>{{ $attendance->loc_name }}</td>
@@ -129,7 +146,7 @@ function confirmDelete() {
 @section('styles')
 <style>
     .table-warning {
-        background-color: #fff3cd;
+        background-color: red;
     }
     .checkin {
         background-color: #98F5F9 !important;
