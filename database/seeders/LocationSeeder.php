@@ -44,9 +44,9 @@ class LocationSeeder extends Seeder
             // Add more locations as needed
         ];
 
-        foreach ($locations as $location) {
-            Location::create($location);
-        }
+        //foreach ($locations as $location) {
+        //    Location::create($location);
+        //}
     }
     public function getFormattedStartDateAttribute()
     {

@@ -27,11 +27,11 @@
             <input type="text" class="form-control" id="code" name="code" value="{{ old('code') }}" required>
         </div>
         <div class="form-group">
-            <label for="latitude">經度</label>
+            <label for="latitude">緯度</label>
             <input type="number" step="any" class="form-control" id="latitude" name="latitude" value="{{ old('latitude') }}" required>
         </div>
         <div class="form-group">
-            <label for="longitude">緯度</label>
+            <label for="longitude">經度</label>
             <input type="number" step="any" class="form-control" id="longitude" name="longitude" value="{{ old('longitude') }}" required>
         </div>
         <div class="form-group">

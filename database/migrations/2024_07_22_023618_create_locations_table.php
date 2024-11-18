@@ -15,8 +15,8 @@ return new class extends Migration
         $table->id();
        $table->string('loc_name')->comment('上班地點');
         $table->string('code')->comment('區號');
-        $table->decimal('latitude', 10, 8)->comment('緯度');
-        $table->decimal('longitude', 11, 8)->comment('經度');
+        $table->decimal('latitude', 14, 12)->comment('緯度');
+        $table->decimal('longitude', 15, 12)->comment('經度');
         $table->date('start_date')->nullable()->comment('開始日期');
         $table->date('end_date')->nullable()->comment('結束日期');
         $table->boolean('is_delete')->default(false)->comment('是否删除');
