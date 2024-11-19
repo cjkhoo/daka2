@@ -7,7 +7,7 @@
         <div class="col-md-6">
             <p><h2>{{config('view.company.name')}}</h2></p>
             <div class="card">
-                <div class="card-header">打卡     <a  href="{{ route('logout') }}" class="btn btn-danger d-inline" style="float: right">登出</a> <a  href="{{ route('password.change') }}" class="btn d-inline btn-secondary" style="float: right;margin-right:5px">换密码</a></div>
+                <div class="card-header">打卡     <a  href="{{ route('logout') }}" class="btn btn-danger d-inline" style="float: right">登出</a> <a  href="{{ route('password.change') }}" class="btn d-inline btn-secondary" style="float: right;margin-right:5px">换密码</a><a  href="{{ route('location.change') }}" class="btn d-inline btn-secondary" style="float: right;margin-right:5px">换地点</a></div>
                 <div class="card-body">
                     @if(session('success'))
                         <div class="alert alert-success" role="alert">
@@ -16,14 +16,16 @@
                     @endif
                     <div id="successAlert" class="alert alert-success  d-none" role="alert"></div>
                     <div id="errorAlert" class="alert alert-danger d-none" role="alert"></div>
-                   
+                        <div class="form-group">
+                           <button onclick="window.location.reload();">請點擊刷新按鈕</button>
+                        </div>
                         <div class="form-group">
                             <label for="username">姓名： {{$user->name}}<br>日期時間: {{$currentDateTime}}</label>                 
                         </div>
                          <div class="form-group">
                             <label>顯示定位地點： {{$location->loc_name??"還沒有固定工作地點"}}</label> <br>
                             <label id="location" for="location"> </label> <br>               
-                            <label id="distance"> </label>                     
+                            <label id="distance">請稍等</label>                     
 
                         </div>
                         <div class="form-group">
@@ -73,35 +75,35 @@
             checkinData.latitude=latitude;
             checkinData.longitude=longitude;
             checkinData.loc_latitude= {{$location->latitude??''}};
-            checkinData.loc_longitude= {{$location->latitude??''}};
-           
+            checkinData.loc_longitude= {{$location->longitude??''}};
+            //const distance=haversineDistance(checkinData.latitude,checkinData.longitude,checkinData.loc_latitude,checkinData.loc_longitude);
+            //console.log(checkinData.latitude+","+checkinData.longitude+","+checkinData.loc_latitude+","+checkinData.loc_longitude);
+            checkinData.distance=haversineDistance(checkinData.latitude,checkinData.longitude,checkinData.loc_latitude,checkinData.loc_longitude);
+            document.getElementById("distance").innerHTML =checkinData.latitude+","+checkinData.longitude+","+checkinData.loc_latitude+","+checkinData.loc_longitude+"<br>"+checkinData.distance.toFixed(6)+'M';
         
-            // fetch('{{route('validatelocation')}}', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            //     },
-            //     body: JSON.stringify({
-            //         latitude: latitude,
-            //         longitude: longitude,
-            //         loc_latitude: {{$location->latitude??''}},
-            //         loc_longitude: {{$location->longitude??""}}
-            //     })
-            // })
-            // .then(response => response.json())
-            // .then(data => {
-              
-            //          checkinData.distance=data.distance;
-            //       document.getElementById("distance").innerHTML = '<p>距離工作定點是: '+data.distance+'m';
-            //         $('#successAlert').text('定位成功').removeClass('d-none');
-            //         $('#errorAlert').addClass('d-none');
-            // })
-            // .catch(error => {
-            //     console.error('Error:', error);
-            // });
-           
+          }
+            function haversineDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371000; // Earth's radius in meters
+        
+            // Convert degrees to radians
+            const toRadians = (degree) => degree * (Math.PI / 180);
+            
+            const a1 = toRadians(lat1);
+            const b1 = toRadians(lat2);
+            const c1 = toRadians(lat2 - lat1);
+            const d1 = toRadians(lon2 - lon1);
+        
+            // Haversine formula
+            const a = Math.sin(c1 / 2) ** 2 + 
+                      Math.cos(a1) * Math.cos(b1) * 
+                      Math.sin(d1 / 2) ** 2;
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        
+            // Distance in meters
+            const distance = R * c;
+            return distance;
         }
+
 
         function showError(error) {
             switch(error.code) {
@@ -120,9 +122,21 @@
             }
 
         }
+        
         function checkin() {
 
+                if(!checkinData.latitude){
+                    alert('無法獲取位置信息, 請允許位置許可');
+                    return false;
+                }
 
+                if(checkinData.distance>300){
+                    alert('請點擊刷新按鈕');
+                     return false;
+                    
+                }
+                
+                
 
                fetch('{{route('checkin')}}', {
                 method: 'POST',
@@ -164,6 +178,15 @@
         }
 
         function checkout() {
+            
+              if(!checkinData.latitude){
+                    alert('無法獲取位置信息, 請允許位置許可');
+                    return false;
+                }
+                if(checkinData.distance>300){
+                    alert('請點擊刷新按鈕');
+                      return false;  
+                }
 
             
                fetch('{{route('checkout')}}', {

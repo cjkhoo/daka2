@@ -71,12 +71,12 @@
                         $highlight = false;
                  
                         if($user->user_level==2){
-                            if ($checkin->check_in_distance > 100 || 
+                            if ($checkin->check_in_distance > 300 || 
                             $checkin->check_in_time?->format('H:i') > '08:30') {
                             $highlight = true;
                          }
                         }elseif($user->user_level==3){
-                            if ($checkin->check_in_distance > 100 || 
+                            if ($checkin->check_in_distance > 300 || 
                             $checkin->check_in_time?->format('H:i') > '08:00') {
                             $highlight = true;
                          }

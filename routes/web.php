@@ -40,6 +40,8 @@ Route::middleware('user')->group(function () {
     Route::post('checkin', [UserController::class, 'checkin']);
         Route::get('password/change', [UserController::class, 'showChangePasswordForm'])->name('password.change');
     Route::post('password/change', [UserController::class, 'changePassword'])->name('password.change.post');
+     Route::get('location/change', [UserController::class, 'showChangelocationForm'])->name('location.change');
+    Route::post('location/change', [UserController::class, 'changelocation'])->name('location.change.post');
     Route::post('validatelocation', [UserController::class, 'validatelocation'])->name('validatelocation');  
     Route::post('checkout', [UserController::class, 'checkout'])->name('checkout');;
     Route::get('checkinlist', [CheckInController::class, 'showCheckinList'])->name('checkin.list');

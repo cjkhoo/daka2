@@ -36,7 +36,7 @@
                             @enderror
                         </div>
                         <button type="submit" class="btn btn-warning">登入</button>
-                         <a class="btn btn-danger" href="{{route('register')}}">註冊</a>
+                         
                     </form>
                 
                 </div>

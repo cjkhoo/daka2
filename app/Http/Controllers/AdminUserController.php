@@ -31,7 +31,7 @@ class AdminUserController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:255',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => 'required|string|min:8',
             'loc_id' => 'nullable|exists:locations,id',
             'user_level' => 'required|integer|in:2,3',
             
@@ -62,8 +62,8 @@ class AdminUserController extends Controller
         // Get user levels for the dropdown (you might want to adjust this based on your needs)
         $userLevels = [
             '1' => 'Admin',
-            '2' => 'Manager',
-            '3' => 'Regular User',
+            '2' => 'indoor',
+            '3' => 'outdoor',
         ];
 
         return view('admin.users.edit', compact('user', 'locations', 'userLevels'));

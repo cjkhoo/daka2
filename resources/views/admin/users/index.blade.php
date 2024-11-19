@@ -6,7 +6,7 @@
 @section('content')
 <div class="container">
     <h2>人員管理</h2>
-    <!-- <a href="{{ route('admin.users.create') }}" class="btn btn-primary mb-3">Add New User</a> -->
+    <a href="{{ route('admin.users.create') }}" class="btn btn-primary mb-3">創建新人員</a>
     
     <table class="table">
         <thead>

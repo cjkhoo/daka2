@@ -85,14 +85,14 @@
         .form-group{
             padding-top:15px;
         }
-            .checkin {
+   /*         .checkin {
         background-color: #98F5F9 !important;
     }
     .checkout {
         background-color: #D8F4CE !important;
-    }
+    }*/
     </style>
-   
+    @yield('styles')
 </head>
 <body>
     <div class="d-flex" id="wrapper">
@@ -148,7 +148,7 @@
                                         <hr class="dropdown-divider">
                                     </li>
                                     <li>
-                                        <a href="#" class="dropdown-item">
+                                        <a href="{{ route('admin.locations.index')}}" class="dropdown-item">
                                             <i class="fas fa-map-marker-alt"></i> 工作地點管理
                                         </a>
                                     </li>
@@ -156,7 +156,7 @@
                                         <hr class="dropdown-divider">
                                     </li>
                                     <li>
-                                        <a href="#" class="dropdown-item">
+                                        <a href="{{ route('admin.report.checkin')}}" class="dropdown-item">
                                             <i class="fas fa-chart-bar"></i> 報告
                                         </a>
                                     </li>
@@ -164,15 +164,16 @@
                                         <hr class="dropdown-divider">
                                     </li>
                                     <li>
-                                         <form action="{{ route('admin.logout') }}" method="POST">
-                                             @csrf
+                                         
                                         <a href="#" class="dropdown-item" >
                                             <i class="fas fa-sign-out-alt"></i> 
-                                           
+                                           <form action="{{ route('admin.logout') }}" method="POST">
+                                             @csrf
                                                 <button type="submit" class="dropdown-item" style="display: contents;padding:0">登出</button>
+                                                </form>
                                            
                                         </a>
-                                         </form>
+                                         
                                     </li>
                                    
                             

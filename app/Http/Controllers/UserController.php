@@ -109,6 +109,29 @@ class UserController extends Controller
 
         return redirect()->route('checkin')->with('status', 'Password changed successfully!');
     }
+     public function showChangelocationForm()
+    {
+         $locations = Location::where('is_delete', false)->get();
+         $user = Auth::guard('web')->user();
+        return view('web.changeloc', compact('user','locations'));
+    }
+
+
+public function changelocation(Request $request)
+{
+    // Validate the input to ensure loc_id is provided and valid
+    $request->validate([
+        'loc_id' => 'required|exists:locations,id', // Ensure the location ID exists in the locations table
+    ]);
+
+    // Update the user's location
+    $user = auth()->user(); // Assuming the user is authenticated
+    $user->loc_id = $request->input('loc_id');
+    $user->save();
+
+    // Redirect back with a success message
+    return redirect()->route('checkin')->with('status', 'Location changed successfully!');
+}
 
     public function showcheckin()
     {

@@ -27,11 +27,21 @@
     
 
             <div class="form-group col-md-4" style="display: -webkit-inline-box;">
-                 <input type="month" id="date" style="padding: 6px;" name="date" min="2024-04" value="{{ request('date') }}"/> 
+                 @php
+    $currentMonth = date('Y-m'); // Get the current year and month
+@endphp
+<input 
+    type="month" 
+    id="date" 
+    class="form-control" 
+    name="date" 
+    min="2024-04" 
+    value="{{ request('date', $currentMonth) }}" 
+/>
                       <select name="user_id" id="user_id" class="form-select">
                     <option value=""> - </option>
                     @foreach($users as $user)
-                        <option value="{{ $user->id }}" {{ request('user_id') == $user->id ? 'selected' : '' }}>{{ $user->username }}</option>
+                        <option value="{{ $user->id }}" {{ request('user_id') == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
                     @endforeach   
                     </select>      
                                 <button type="submit" class="btn btn-primary ">篩選</button>
@@ -57,7 +67,6 @@
                     <form action="{{ route('admin.checkins.export') }}" method="GET" class="d-inline">
     <input type="hidden" name="date" value="{{ request('date') }}">
                         <input type="hidden" name="user_id" value="{{ request('user_id') }}">
-                         <input type="hidden" name="name" value="{{ $user->username }}">
     <button style="margin-left: 5px"  type="submit" class="btn btn-success">匯出到 Excel</button>
 </form>
 
@@ -82,33 +91,33 @@
         <tbody>
         
         @foreach($attendances as $attendance)
-            @php
-                        $highlight = false;
-                 
-                        if($user->user_level==2){
-                            if ($attendance->check_in_distance  > 100 || 
-                            $attendance->check_in_time?->format('H:i') > '08:30') {
-                            $highlight = true;
-                         }
-                        }elseif($user->user_level==3){
-                            if ($attendance->check_in_distance  > 100 || 
-                            $attendance->check_in_time?->format('H:i') > '08:00') {
-                            $highlight = true;
-                         }
-                        }
-            @endphp           
-            <tr class="{{ $highlight ? 'table-warning' : '' }}">
+        
+            <tr>
           
                 <td>{{ $attendance->date?->format('Y-m-d') }}</td>
                 <td>{{ $attendance->user_name }}</td>
                 <td>{{ $attendance->loc_name }}</td>
                 <td>{{ $attendance->loc_latlong }}</td>
-                <td class="checkin">{{ $attendance->check_in_time?->format('H:i:s') }}</td>
+                
+                <td
+    @class(['checkin',
+        'table-warning' => ($user->user_level == 2 && optional($attendance->check_in_time)->format('H:i') > '08:30') ||
+                 ($user->user_level == 3 && optional($attendance->check_in_time)->format('H:i') > '08:00')
+    ])
+>{{ $attendance->check_in_time?->format('H:i:s') }}</td>
                 <td>{{ $attendance->check_in_latlong }}</td>
-                <td>{{ $attendance->check_in_distance }}</td>
+                <td 
+    @class([
+        'table-warning' => $attendance->check_in_distance > 300
+    ])
+>{{ $attendance->check_in_distance }}</td>
                 <td class="checkout">{{ $attendance->check_out_time?->format('H:i:s') }}</td>
                 <td>{{ $attendance->check_out_latlong }}</td>
-                <td>{{ $attendance->check_out_distance }}</td>
+                 <td 
+    @class([
+        'table-warning' => $attendance->check_out_distance > 300
+    ])
+>{{ $attendance->check_out_distance }}</td>
         
             </tr>
             @endforeach
@@ -146,13 +155,13 @@ function confirmDelete() {
 @section('styles')
 <style>
     .table-warning {
-        background-color: red;
+        background-color: red  !important;
     }
-    .checkin {
-        background-color: #98F5F9 !important;
+    .table td.checkin {
+        background-color: #98F5F9;
     }
-    .checkout {
-        background-color: #D8F4CE !important;
+    .table td.checkout {
+        background-color: #D8F4CE;
     }
 </style>
 @endsection

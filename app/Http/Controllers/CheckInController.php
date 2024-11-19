@@ -110,10 +110,11 @@ class CheckInController extends Controller
     public function export(Request $request)
     {
         $user_id = $request->user_id;
+        $name = User::where('id', $user_id)->value('name');
         $selectedMonth = $request->input('date', Carbon::now()->format('Y-m'));
         $year = substr($selectedMonth, 0, 4);
         $month = substr($selectedMonth, 5, 2);
 
-        return Excel::download(new CheckInsExport($user_id, $year, $month), $request->name.'-'.$month.'.xlsx');
+        return Excel::download(new CheckInsExport($user_id, $year, $month), $name.'-'.$month.'.xlsx');
     }
 }
