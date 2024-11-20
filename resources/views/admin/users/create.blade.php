@@ -49,8 +49,8 @@
             <div class="form-group  mb-3">
                 <label for="user_level">用戶類別</label>
                 <select class="form-control" id="user_level" name="user_level" required>               
-                    <option value="2">B 室內工作人員</option>
-                    <option value="3">C 戶外工作人員</option>
+                    <option value="2">B 工地班</option>
+                    <option value="3">C 公司班</option>
                 </select>
             </div>
         <button type="submit" class="btn btn-primary">建立新用戶</button>

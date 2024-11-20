@@ -213,11 +213,11 @@ public function changelocation(Request $request)
    // Prepare check-in data
     $checkInData = [
         'user_id' => $user->id,
-        'loc_id' => $location->id,
+        'check_in_loc_id' => $location->id,
         'date' => $dateFormatted,
         'user_name' => $user->name,
-        'loc_name' => $location->loc_name,
-        'loc_latlong' => $location->latitude . ',' . $location->longitude,
+        'check_in_loc_name' => $location->loc_name,
+        'check_in_loc_latlong' => $location->latitude . ',' . $location->longitude,
         'check_in_time' => Carbon::now(),
         'check_in_latlong' => $request->latitude . ',' . $request->longitude,
         'check_in_distance' => $distance,
@@ -280,9 +280,9 @@ public function checkout(Request $request)
 
     // Check if already checked out
 
-    if ($checkIn->check_out_time != null) {
-        return response()->json(['message' => '今天已經簽出'], 400);
-    }
+    // if ($checkIn->check_out_time != null) {
+    //     return response()->json(['message' => '今天已經簽出'], 400);
+    // }
 
     // Calculate distance between user and location for checkout
     $checkoutDistance = $this->calculateDistance(
@@ -294,6 +294,9 @@ public function checkout(Request $request)
 
     // Prepare checkout data
     $checkoutData = [
+        'check_out_loc_id' => $location->id,
+        'check_out_loc_name' => $location->loc_name,
+        'check_out_loc_latlong' => $location->latitude . ',' . $location->longitude,
         'check_out_time' => Carbon::now(),
         'check_out_latlong' => $request->latitude . ',' . $request->longitude,
         'check_out_distance' => $checkoutDistance,
@@ -318,7 +321,7 @@ public function checkout(Request $request)
     {
         // Implement distance calculation logic here
         // This is a simplified version and might not be accurate for your needs
-        $earthRadius = 6371; // in kilometers
+        $earthRadius = 6371000; // in kilometers
 
         $dLat = deg2rad($lat2 - $lat1);
         $dLon = deg2rad($lon2 - $lon1);

@@ -28,8 +28,10 @@
                         </div>
                         <div class="form-group">
                             <label for="password">密碼</label>
-                            <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" required>
+                            <input type="password" placeholder="" name="password" class="form-control @error('password') is-invalid @enderror" required>
+                            <span style="font-size: 14px;color:red">第一次登入密碼為 qwert1234</span>
                             @error('password')
+
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>

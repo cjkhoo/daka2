@@ -11,15 +11,18 @@ class CheckIn extends Model
 
 
     protected $fillable = [
-        'user_id',
-        'loc_id',
+        'user_id',        
         'date',
         'user_name',
-        'loc_name',
-        'loc_latlong',
+        'check_in_loc_id',
+        'check_in_loc_name',
+        'check_in_loc_latlong',
         'check_in_time',
         'check_in_latlong',
         'check_in_distance',
+        'check_out_loc_id',
+        'check_out_loc_name',
+        'check_out_loc_latlong',
         'check_out_time',
         'check_out_latlong',
         'check_out_distance',

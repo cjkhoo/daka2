@@ -52,10 +52,11 @@
             <thead class="thead-dark">
                 <tr>
                     <th>日期</th>
-                    <th>地點</th>
+                    <th>上班地點</th>
                     <th>上班時間</th>
                     <th>上班 (經度,緯度)</th>
                     <th>上班距離工作地點</th>
+                    <th>下班地點</th>
                     <th>下班時間</th>
                     <th>下班 (經度,緯度)</th>
                     <th>下班距離工作地點</th>
@@ -70,25 +71,34 @@
                     @php
                         $highlight = false;
                  
-                        if($user->user_level==2){
-                            if ($checkin->check_in_distance > 300 || 
-                            $checkin->check_in_time?->format('H:i') > '08:30') {
+                        if($user->user_level==3){
+                           if (
+                            $checkin->check_in_distance > 300 || 
+                            $checkin->check_out_distance > 300 || 
+                            $checkin->check_in_time?->format('H:i') > '08:30' || 
+                            ($checkin->check_out_time && $checkin->check_out_time->format('H:i') < '17:30')
+                           ) {
                             $highlight = true;
-                         }
-                        }elseif($user->user_level==3){
-                            if ($checkin->check_in_distance > 300 || 
-                            $checkin->check_in_time?->format('H:i') > '08:00') {
-                            $highlight = true;
-                         }
+                           }
+                        }elseif($user->user_level==2){
+                          if (
+                            $checkin->check_in_distance > 300 || 
+                            $checkin->check_out_distance > 300 || 
+                            $checkin->check_in_time?->format('H:i') > '08:00' || 
+                            ($checkin->check_out_time && $checkin->check_out_time->format('H:i') < '17:00')
+                            ) {
+                                $highlight = true;
+                            }
                         }
                         
                     @endphp
                     <tr class="{{ $highlight ? 'warning' : '' }}">
                         <td>{{ $checkin->date->format('Y-m-d') }}</td>
-                        <td>{{ $checkin->loc_name }}</td>
+                        <td>{{ $checkin->check_in_loc_name }}</td>
                         <td>{{ $checkin->check_in_time->format('H:i') }}</td>
                        <td>{{ $checkin->check_in_latlong }}</td>
                         <td>{{ $checkin->check_in_distance }}m</td>
+                        <td>{{ $checkin->check_out_loc_name }}</td>
                          <td>{{$checkin->check_out_time?->format('H:i') }}</td>
                          <td>{{ $checkin->check_out_latlong }}</td>
                         <td>{{ $checkin->check_out_distance }}m</td>

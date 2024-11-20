@@ -28,11 +28,11 @@
                 <td>{{ $user->name }}</td>                
                 <td>
                     @if($user->user_level == 1)
-                        A
+                        A 管理员
                     @elseif($user->user_level == 2)
-                       B
+                       B 工地班
                     @else
-                        C
+                        C 公司班
                     @endif
                 </td>
                 <td>{{ $user->loc_name ?? '' }}</td>

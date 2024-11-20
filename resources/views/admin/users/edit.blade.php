@@ -34,9 +34,9 @@
         <div class="form-group mb-3">
             <label for="user_level">等級</label>
             <select class="form-control" id="user_level" name="user_level" required>    
-            <option value="1" {{ $user->user_level == 1 ? 'selected' : '' }}>A</option>            
-                <option value="2" {{ $user->user_level == 2 ? 'selected' : '' }}>B</option>
-                <option value="3" {{ $user->user_level == 3 ? 'selected' : '' }}>C</option>
+            <!-- <option value="1" {{ $user->user_level == 1 ? 'selected' : '' }}>A</option>    -->         
+                <option value="2" {{ $user->user_level == 2 ? 'selected' : '' }}>B 工地班</option>
+                <option value="3" {{ $user->user_level == 3 ? 'selected' : '' }}>C 公司班</option>
             </select>
         </div>
         <div class="form-group mb-3" >

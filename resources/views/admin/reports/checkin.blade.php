@@ -77,11 +77,13 @@
             <tr>
                 <th>日期</th>
                 <th>姓名</th>
-                <th>地點</th>
-                <th>地點 (緯度,經度)</th>
+                <th>上班地點</th>
+                <!-- <th>上班地點 (緯度,經度)</th> -->
                 <th>上班時間</th>
                 <th>上班 (緯度,經度)</th>
                 <th>上班距離工作地點</th>
+                <th>下班地點</th>
+                <!-- <th>下班地點 (緯度,經度)</th> -->
                 <th>下班時間</th>
                 <th>下班 (緯度,經度)</th>
                 <th>下班距離工作地點</th>
@@ -96,13 +98,13 @@
           
                 <td>{{ $attendance->date?->format('Y-m-d') }}</td>
                 <td>{{ $attendance->user_name }}</td>
-                <td>{{ $attendance->loc_name }}</td>
-                <td>{{ $attendance->loc_latlong }}</td>
+                <td>{{ $attendance->check_in_loc_name }}</td>
+          <!--       <td>{{ $attendance->check_in_loc_latlong }}</td> -->
                 
                 <td
     @class(['checkin',
-        'table-warning' => ($user->user_level == 2 && optional($attendance->check_in_time)->format('H:i') > '08:30') ||
-                 ($user->user_level == 3 && optional($attendance->check_in_time)->format('H:i') > '08:00')
+        'table-warning' => ($user->user_level == 2 && optional($attendance->check_in_time)->format('H:i') > '08:00') ||
+                 ($user->user_level == 3 && optional($attendance->check_in_time)->format('H:i') > '08:30')
     ])
 >{{ $attendance->check_in_time?->format('H:i:s') }}</td>
                 <td>{{ $attendance->check_in_latlong }}</td>
@@ -111,8 +113,13 @@
         'table-warning' => $attendance->check_in_distance > 300
     ])
 >{{ $attendance->check_in_distance }}</td>
-                <td class="checkout">{{ $attendance->check_out_time?->format('H:i:s') }}</td>
-                <td>{{ $attendance->check_out_latlong }}</td>
+     <td>{{ $attendance->check_out_loc_name }}</td>
+               <!--  <td>{{ $attendance->check_out_loc_latlong }}</td> -->
+                <td @class(['checkout',
+        'table-warning' => ($user->user_level == 2 && ($attendance->check_out_time && optional($attendance->check_out_time)->format('H:i') < '05:00')) ||
+                 ($user->user_level == 3 && ($attendance->check_out_time && optional($attendance->check_out_time)->format('H:i') < '05:30'))
+    ])>{{ $attendance->check_out_time?->format('H:i:s') }}</td>
+                <td >{{ $attendance->check_out_latlong }}</td>
                  <td 
     @class([
         'table-warning' => $attendance->check_out_distance > 300
