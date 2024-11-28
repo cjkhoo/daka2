@@ -39,5 +39,10 @@ class CheckIn extends Model
         'is_delete' => 'boolean',
     ];
 
-
+    
+     // Define the relationship
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

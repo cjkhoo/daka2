@@ -103,8 +103,8 @@
                 
                 <td
     @class(['checkin',
-        'table-warning' => ($user->user_level == 2 && optional($attendance->check_in_time)->format('H:i') > '08:00') ||
-                 ($user->user_level == 3 && optional($attendance->check_in_time)->format('H:i') > '08:30')
+        'table-warning' => ($attendance->user->user_level == 2 && optional($attendance->check_in_time)->format('H:i') > '08:00') ||
+                 ($attendance->user->user_level == 3 && optional($attendance->check_in_time)->format('H:i') > '08:30')
     ])
 >{{ $attendance->check_in_time?->format('H:i:s') }}</td>
                 <td>{{ $attendance->check_in_latlong }}</td>
@@ -116,8 +116,8 @@
      <td>{{ $attendance->check_out_loc_name }}</td>
                <!--  <td>{{ $attendance->check_out_loc_latlong }}</td> -->
                 <td @class(['checkout',
-        'table-warning' => ($user->user_level == 2 && ($attendance->check_out_time && optional($attendance->check_out_time)->format('H:i') < '05:00')) ||
-                 ($user->user_level == 3 && ($attendance->check_out_time && optional($attendance->check_out_time)->format('H:i') < '05:30'))
+        'table-warning' => ($attendance->user->user_level == 2 && ($attendance->check_out_time && optional($attendance->check_out_time)->format('H:i') < '05:00')) ||
+                 ($attendance->user->user_level == 3 && ($attendance->check_out_time && optional($attendance->check_out_time)->format('H:i') < '05:30'))
     ])>{{ $attendance->check_out_time?->format('H:i:s') }}</td>
                 <td >{{ $attendance->check_out_latlong }}</td>
                  <td 

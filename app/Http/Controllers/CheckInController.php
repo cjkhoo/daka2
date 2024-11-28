@@ -44,7 +44,10 @@ class CheckInController extends Controller
             ->whereMonth('date', substr($selectedMonth, 5, 2))
             ->where('is_delete',0)
             ->orderBy('date', 'desc')
+            ->with('user') // Eager load the user relationship
             ->get();
+
+
 
         }
         else{
