@@ -182,6 +182,13 @@ public function changelocation(Request $request)
             $location->latitude,
             $location->longitude
         );
+          Log::info('insert checin', [
+           '$request->latitude' => $request->latitude,
+            '$request->longitude' => $request->longitude,
+            '$location->latitude' => $location->latitude,
+            '$location->longitude' => $location->longitude,
+            '$distance' => $distance,
+        ]);
 
         // 获取当前日期
         $currentDate = Carbon::now();
@@ -225,9 +232,12 @@ public function changelocation(Request $request)
 
     // Validate that all required fields are present and not empty
     foreach ($checkInData as $key => $value) {
-        if (empty($value)) {
-            return response()->json(['message' => "字段'$key'不能為空"], 400);
-        }
+        // if (empty($value)) {
+        //     return response()->json(['message' => "字段'$key'不能為空"], 400);
+        // }
+         if ($key !== 'check_in_distance' && empty($value)) {
+        return response()->json(['message' => "字段'$key'不能為空"], 400);
+         }
     }
 
     Log::info('insert checkin', $checkInData);
