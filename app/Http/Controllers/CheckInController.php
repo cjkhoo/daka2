@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Exports\CheckInsExport;
+use App\Exports\CheckInsExportAll; 
 use Maatwebsite\Excel\Facades\Excel;
 
 class CheckInController extends Controller
@@ -119,5 +120,17 @@ class CheckInController extends Controller
         $month = substr($selectedMonth, 5, 2);
 
         return Excel::download(new CheckInsExport($user_id, $year, $month), $name.'-'.$month.'.xlsx');
+    }
+
+
+
+       public function exportall(Request $request)
+    {
+    
+        $selectedMonth = $request->input('date', Carbon::now()->format('Y-m'));
+        $year = substr($selectedMonth, 0, 4);
+        $month = substr($selectedMonth, 5, 2);
+
+        return Excel::download(new CheckInsExportAll( $year, $month), $month.'.xlsx');
     }
 }

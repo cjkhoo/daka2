@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\CustomAdminLoginController;
 use App\Http\Controllers\AdminLocationController;
 use App\Http\Controllers\CheckInController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -86,6 +87,8 @@ Route::middleware('admin')->group(function () {
     Route::delete('admin/report/checkin/destroy', [CheckInController::class, 'destroy'])->name('admin.report.checkin.destroy');
 
     Route::get('/admin/checkins/export', [CheckInController::class, 'export'])->name('admin.checkins.export');
+     Route::get('/admin/checkins/export/all', [CheckInController::class, 'exportAll'])->name('admin.checkins.export.all');
+
 
 
 });

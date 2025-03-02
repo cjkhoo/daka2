@@ -70,7 +70,32 @@
     <button style="margin-left: 5px"  type="submit" class="btn btn-success">匯出到 Excel</button>
 </form>
 
+
      </div>
+     <div style="margin-top: 15px;">
+<form action="{{ route('admin.checkins.export.all') }}" method="GET" class="d-inline">
+  <select id="monthDropdown" name="date"></select>
+  <button style="margin-left: 5px" type="submit" class="btn btn-success">匯出上月全部員工 Excel</button>
+</form>
+
+<script>
+  const dropdown = document.getElementById("monthDropdown");
+  const currentDate = new Date();
+
+  for (let i = 0; i < 6; i++) {
+    const option = document.createElement("option");
+    const month = new Date();
+    month.setMonth(currentDate.getMonth() - i);
+
+    const monthName = month.toLocaleString("default", { month: "long" });
+    const year = month.getFullYear();
+
+    option.value = `${year}-${String(month.getMonth() + 1).padStart(2, '0')}`;
+    option.text = `${monthName} ${year}`;
+    dropdown.appendChild(option);
+  }
+</script>
+   </div>
        
     <table class="table" style="margin-top:50px">
         <thead>

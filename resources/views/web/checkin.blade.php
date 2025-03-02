@@ -79,7 +79,7 @@
             //const distance=haversineDistance(checkinData.latitude,checkinData.longitude,checkinData.loc_latitude,checkinData.loc_longitude);
             //console.log(checkinData.latitude+","+checkinData.longitude+","+checkinData.loc_latitude+","+checkinData.loc_longitude);
             checkinData.distance=haversineDistance(checkinData.latitude,checkinData.longitude,checkinData.loc_latitude,checkinData.loc_longitude);
-            document.getElementById("distance").innerHTML =checkinData.loc_latitude+","+checkinData.loc_longitude+"<br>"+checkinData.distance.toFixed(6)+'M';
+            document.getElementById("distance").innerHTML =checkinData.latitude+","+checkinData.longitude+","+checkinData.loc_latitude+","+checkinData.loc_longitude+"<br>"+checkinData.distance.toFixed(6)+'M';
         
           }
             function haversineDistance(lat1, lon1, lat2, lon2) {
