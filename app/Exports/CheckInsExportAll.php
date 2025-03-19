@@ -93,11 +93,27 @@ class UserCheckInSheet implements FromCollection, WithHeadings, WithTitle, Shoul
             
             // Calculate total work hours when both check-in and check-out times exist
             $workHours = '';
+            $otHours = 0;
+            $day = 0;
             if ($checkInTime && $checkOutTime) {
-                $minutes = $checkOutTime->diffInMinutes($checkInTime);
+                $minutes = $checkOutTime->diffInMinutes($checkInTime)-60;
                 $hours = floor($minutes / 60);
                 $remainingMinutes = $minutes % 60;
                 $workHours = $hours . ':' . str_pad($remainingMinutes, 2, '0', STR_PAD_LEFT);
+                $otHours= $hours-8 . ':' . str_pad($remainingMinutes, 2, '0', STR_PAD_LEFT);
+                if ($otHours < 0) {
+                    $otHours = 0;
+                }
+                if($minutes>450){
+                    $day=1;
+                }
+                elseif($minutes>180 && $minutes<240){
+                    $day=0.5;
+                }
+                else{                    
+                    $day=number_format($minutes / 480, 2);
+                }
+
             }
             
             return [
@@ -115,6 +131,8 @@ class UserCheckInSheet implements FromCollection, WithHeadings, WithTitle, Shoul
                 '下班 (經度,緯度)' => $checkIn->check_out_latlong,
                 '下班距離工作地點' => $checkIn->check_out_distance,
                 '上班總時間' => $workHours,
+                '加班時長' => $otHours,
+                '天數' => $day,
                 
             ];
         });
@@ -148,6 +166,8 @@ class UserCheckInSheet implements FromCollection, WithHeadings, WithTitle, Shoul
             '下班 (經度,緯度)',
             '下班距離工作地點',
             '上班總時間',
+            '加班時長',
+            '天數'
             
         ];
     }
@@ -162,12 +182,22 @@ class UserCheckInSheet implements FromCollection, WithHeadings, WithTitle, Shoul
     $styles = [
         1 => ['font' => ['bold' => true]],
     ];
+
+    $daySum = 0;
+    for ($i = 2; $i <= $this->checkInCount + 1; $i++) {
+        $cellValue = $sheet->getCell('P' . $i)->getValue();
+        if (is_numeric($cellValue)) {
+            $daySum += $cellValue;
+        }
+    }
     
     // Add total row after the data
     $totalRow = $this->checkInCount + 2;
-    $sheet->setCellValue('A' . $totalRow, '總工作天數:');
-    $sheet->setCellValue('B' . $totalRow, $this->checkInCount);
+    $sheet->setCellValue('O' . $totalRow, '總工作天數:');
+    $sheet->setCellValue('P' . $totalRow, $daySum);
     $styles[$totalRow] = ['font' => ['bold' => true]];
+
+
     
     // Determine standard times based on shift type (A or B)
     $requiredStartTime = $this->user->user_level == 2 ? '08:00:00' : '08:30:00';
@@ -203,12 +233,31 @@ class UserCheckInSheet implements FromCollection, WithHeadings, WithTitle, Shoul
         ->setOperatorType(Conditional::OPERATOR_NONE)
         ->addCondition('AND(NOT(ISBLANK(M2)),M2>500)')
         ->getStyle()->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('FFFFFF00');
+
+$conditionalStyles['N'] = new Conditional(); 
+$conditionalStyles['N']->setConditionType(Conditional::CONDITION_EXPRESSION)
+    ->setOperatorType(Conditional::OPERATOR_NONE)
+    ->addCondition('AND(NOT(ISBLANK(N2)), ISNUMBER(FIND(":",N2)), VALUE(SUBSTITUTE(LEFT(N2,FIND(":",N2)-1)," ",""))+VALUE(SUBSTITUTE(MID(N2,FIND(":",N2)+1,2)," ",""))/60>=8)')
+    ->getStyle()->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('FF00FF00'); // Green color for >= 8 hours
+
+$conditionalStyles['N_less'] = new Conditional(); 
+$conditionalStyles['N_less']->setConditionType(Conditional::CONDITION_EXPRESSION)
+    ->setOperatorType(Conditional::OPERATOR_NONE)
+    ->addCondition('AND(NOT(ISBLANK(N2)), ISNUMBER(FIND(":",N2)), VALUE(SUBSTITUTE(LEFT(N2,FIND(":",N2)-1)," ",""))+VALUE(SUBSTITUTE(MID(N2,FIND(":",N2)+1,2)," ",""))/60<8)')
+    ->getStyle()->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('FFFF0000'); // Red color for < 8 hours
+
     
     // Apply conditional formatting to relevant columns for all data rows
     foreach (['F', 'K', 'H', 'M'] as $column) {
         $columnRange = $column . '2:' . $column . ($this->checkInCount + 1);
         $sheet->getStyle($columnRange)->setConditionalStyles([$conditionalStyles[$column]]);
     }
+
+    $columnRange = 'N2:N' . ($this->checkInCount + 1);
+$sheet->getStyle($columnRange)->setConditionalStyles([
+   $conditionalStyles['N'],
+    $conditionalStyles['N_less']
+]);
     
     return $styles;
 }
